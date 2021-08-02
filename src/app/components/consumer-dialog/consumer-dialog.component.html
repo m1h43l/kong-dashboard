@@ -1,0 +1,54 @@
+<div>
+    <h2 mat-dialog-title>Consumer</h2>
+
+    <mat-dialog-content class="kong-dialog kong-consumer-dialog">
+        <div fxLayout="column" fxLayoutAlign="space-between none">
+            <mat-form-field>
+                <mat-label>Username</mat-label>
+                <input #username="ngModel" matInput [(ngModel)]="consumer.username" />
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Custom Id</mat-label>
+                <input #customid="ngModel" matInput [(ngModel)]="consumer.custom_id" />
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Tags</mat-label>
+                <mat-chip-list #tagsChipList>
+                    <mat-chip
+                        class="kong-consumer-dialog-chip"
+                        *ngFor="let tag of consumer.tags"
+                        [selectable]="truthy"
+                        [removable]="truthy"
+                        (removed)="removeTag(tag)"
+                    >
+                        {{ tag }}
+                        <mat-icon matChipRemove *ngIf="truthy">cancel</mat-icon>
+                    </mat-chip>
+                    <input
+                        class="kong-consumer-dialog-chip-input"
+                        placeholder="Enter new tag"
+                        [matChipInputFor]="tagsChipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="truthy"
+                        (matChipInputTokenEnd)="addTag($event)"
+                    />
+                </mat-chip-list>
+            </mat-form-field>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="15px">
+        <button class="mat-raised-button" (click)="cancel()">cancel</button>
+        <button
+            type="submit"
+            class="mat-raised-button"
+            (click)="ok()"
+            [class.mat-primary]="username.value?.length > 0 || customid.value?.length > 0"
+            [disabled]="!(username.value?.length > 0 || customid.value?.length > 0)"
+        >
+            save
+        </button>
+    </mat-dialog-actions>
+</div>

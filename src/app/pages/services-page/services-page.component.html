@@ -1,0 +1,55 @@
+<div>
+    <h2>Services</h2>
+
+    <div *ngIf="services.length === 0">
+        <em>No services available.</em>
+    </div>
+
+    <div>
+        <div fxLayout="row wrap" fxLayoutGap="30px">
+            <mat-form-field class="kong-service-filter-input" fxFlex *ngIf="services.length > 0">
+                <mat-label>Filter</mat-label>
+                <mat-icon matPrefix>search</mat-icon>
+                <input
+                    #searchField
+                    type="search"
+                    matInput
+                    [(ngModel)]="filterTerm"
+                    (keyup.esc)="onClearFilter()"
+                />
+            </mat-form-field>
+
+            <div style="vertical-align: middle" *ngIf="services.length > 0">
+                <button
+                    matSuffix
+                    mat-icon-button
+                    matTooltip="clear filter"
+                    (click)="onClearFilter()"
+                >
+                    <mat-icon>highlight_off</mat-icon>
+                </button>
+                <span>Clear filter</span>
+            </div>
+
+            <div style="vertical-align: middle">
+                <button mat-icon-button matTooltip="add service" (click)="onAddService()">
+                    <mat-icon>add_circle_outline</mat-icon>
+                </button>
+                <span>Add new service</span>
+            </div>
+        </div>
+
+        <div *ngIf="tags.length > 0" style="margin-bottom: 25px">
+            <mat-chip-list multiple="true" (change)="onTagFilterChange($event)">
+                <mat-chip *ngFor="let t of tags">{{ t }}</mat-chip>
+            </mat-chip-list>
+        </div>
+
+        <div fxLayout="row wrap">
+            <app-service-card
+                *ngFor="let service of services | serviceFilter: filterTerm:filterTags"
+                [service]="service"
+            ></app-service-card>
+        </div>
+    </div>
+</div>

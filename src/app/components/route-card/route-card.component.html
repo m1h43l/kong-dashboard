@@ -1,0 +1,29 @@
+<mat-card class="kong-route-card">
+    <mat-card-content class="kong-route-card-content">
+        <div class="kong-route-card-title">{{ route.name ? route.name : route.id }}</div>
+        <span *ngIf="!route.service"><em>No service assigned.</em></span>
+    </mat-card-content>
+
+    <mat-card-actions fxLayout>
+        <button
+            mat-icon-button
+            matTooltip="delete route"
+            (click)="onDeleteRoute()"
+            *ngIf="!waitingForDeleteConfirmation"
+        >
+            <mat-icon>delete_outline</mat-icon>
+        </button>
+        <button
+            mat-icon-button
+            matTooltip="confirm delete"
+            (click)="onConfirmDelete()"
+            *ngIf="waitingForDeleteConfirmation"
+        >
+            <mat-icon style="color: red">check_circle_outline</mat-icon>
+        </button>
+        <span class="spacer">&nbsp;</span>
+        <button mat-icon-button matTooltip="edit route" (click)="onEditRoute()">
+            <mat-icon>create</mat-icon>
+        </button>
+    </mat-card-actions>
+</mat-card>

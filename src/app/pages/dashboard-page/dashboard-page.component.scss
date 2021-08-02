@@ -1,0 +1,29 @@
+.kong-dashboard {
+    width: 100%;
+}
+
+.kong-dashboard > div {
+    margin: 8px;
+}
+
+.kong-dashboard-content {
+    font-size: 120%;
+    margin-top: 25px !important;
+}
+
+.kong-dashboard-content-name {
+    font-weight: 500;
+}
+
+.kong-dashboard-content-value {
+    text-align: center;
+}
+
+.kong-dashboard-content-conn-section > .kong-dashboard-content-name {
+    text-align: center;
+}
+
+.kong-dashboard-content-conn-section {
+    justify-content: center;
+    min-width: 75px !important;
+}

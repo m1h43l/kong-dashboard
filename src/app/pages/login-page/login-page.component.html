@@ -1,0 +1,37 @@
+<div fxFlex fxLayout fxLayoutAlign="space-around center">
+    <div fxLayout="column" fxLayoutAlign="space-between none" class="kong-login-content">
+        <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input #usernameRef="ngModel" matInput required [(ngModel)]="username" />
+            <mat-error>Invalid username</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input
+                #passwordRef="ngModel"
+                matInput
+                required
+                type="password"
+                [(ngModel)]="password"
+                (keyup.enter)="ok()"
+            />
+            <mat-error>Invalid password</mat-error>
+        </mat-form-field>
+        <button
+            mat-button
+            fxFlex
+            type="submit"
+            class="mat-raised-button"
+            (click)="ok()"
+            [class.mat-primary]="!usernameRef.invalid && !passwordRef.invalid"
+            [disabled]="usernameRef.invalid || passwordRef.invalid"
+        >
+            login
+        </button>
+
+        &nbsp;
+
+        <div class="color-warn" *ngIf="errorMessage">{{ errorMessage }}</div>
+    </div>
+</div>

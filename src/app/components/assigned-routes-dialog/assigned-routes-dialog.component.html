@@ -1,0 +1,11 @@
+<div class="kong-service-assigned-routes">
+    <div *ngIf="routes.length === 0"><em>No services assigned to this route.</em></div>
+    <div *ngIf="routes.length > 0">
+        <div
+            echarts
+            [options]="chartOptions"
+            (chartInit)="onChartInit($event)"
+            (chartClick)="onChartClick($event)"
+        ></div>
+    </div>
+</div>

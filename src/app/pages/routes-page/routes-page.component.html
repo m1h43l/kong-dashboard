@@ -1,0 +1,55 @@
+<div>
+    <h2>Routes</h2>
+
+    <div *ngIf="routes.length === 0">
+        <em>No routes available.</em>
+    </div>
+
+    <div>
+        <div fxLayout="row wrap" fxLayoutGap="30px">
+            <mat-form-field *ngIf="routes.length > 0" class="kong-route-filter-input" fxFlex>
+                <mat-label>Filter</mat-label>
+                <mat-icon matPrefix>search</mat-icon>
+                <input
+                    #searchField
+                    type="search"
+                    matInput
+                    [(ngModel)]="filterTerm"
+                    (keyup.esc)="onClearFilter()"
+                />
+            </mat-form-field>
+
+            <div *ngIf="routes.length > 0" style="vertical-align: middle">
+                <button
+                    matSuffix
+                    mat-icon-button
+                    matTooltip="clear filter"
+                    (click)="onClearFilter()"
+                >
+                    <mat-icon>highlight_off</mat-icon>
+                </button>
+                <span>Clear filter</span>
+            </div>
+
+            <div style="vertical-align: middle">
+                <button mat-icon-button matTooltip="add route" (click)="onAddRoute()">
+                    <mat-icon>add_circle_outline</mat-icon>
+                </button>
+                <span>Add new route</span>
+            </div>
+        </div>
+
+        <div *ngIf="tags.length > 0" style="margin-bottom: 25px">
+            <mat-chip-list multiple="true" (change)="onTagFilterChange($event)">
+                <mat-chip *ngFor="let t of tags">{{ t }}</mat-chip>
+            </mat-chip-list>
+        </div>
+
+        <div fxLayout="row wrap">
+            <app-route-card
+                *ngFor="let route of routes | routeFilter: filterTerm:filterTags"
+                [route]="route"
+            ></app-route-card>
+        </div>
+    </div>
+</div>

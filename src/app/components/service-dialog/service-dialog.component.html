@@ -1,0 +1,140 @@
+<div>
+    <h2 mat-dialog-title>Service</h2>
+
+    <mat-dialog-content class="kong-dialog kong-service-dialog">
+        <mat-tab-group mat-stretch-tabs>
+            <mat-tab label="Common">
+                <div fxLayout="column" fxLayoutAlign="space-between none">
+                    <mat-form-field>
+                        <mat-label>Name</mat-label>
+                        <input
+                            #name="ngModel"
+                            matInput
+                            required
+                            [(ngModel)]="service.name"
+                            pattern="[a-zA-Z0-9\\.,-_~]*"
+                        />
+                        <mat-error>Invalid name</mat-error>
+                        <mat-hint>Valid characters are: a-z A-Z 0-9 , . _ - ~</mat-hint>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Protocol</mat-label>
+                        <mat-select [(ngModel)]="service.protocol">
+                            <mat-option [value]="'http'">HTTP</mat-option>
+                            <mat-option [value]="'https'">HTTPS</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Host</mat-label>
+                        <input #host="ngModel" matInput required [(ngModel)]="service.host" />
+                        <mat-error>Invalid hostname</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Port</mat-label>
+                        <input
+                            #host="ngModel"
+                            matInput
+                            required
+                            type="number"
+                            min="1"
+                            max="65535"
+                            [(ngModel)]="service.port"
+                        />
+                        <mat-hint>Valid port numbers: 1 - 65535</mat-hint>
+                        <mat-error>Invalid port</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Path</mat-label>
+                        <input #path="ngModel" matInput [(ngModel)]="service.path" />
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Tags</mat-label>
+                        <mat-chip-list #tagsChipList>
+                            <mat-chip
+                                class="kong-route-dialog-chip"
+                                *ngFor="let tag of service.tags"
+                                [selectable]="truthy"
+                                [removable]="truthy"
+                                (removed)="removeTag(tag)"
+                            >
+                                {{ tag }}
+                                <mat-icon matChipRemove *ngIf="truthy">cancel</mat-icon>
+                            </mat-chip>
+                            <input
+                                class="kong-route-dialog-chip-input"
+                                placeholder="Enter new tag"
+                                [matChipInputFor]="tagsChipList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                [matChipInputAddOnBlur]="truthy"
+                                (matChipInputTokenEnd)="addTag($event)"
+                            />
+                        </mat-chip-list>
+                    </mat-form-field>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Connection">
+                <div fxLayout="column" fxLayoutAlign="space-between none">
+                    <mat-form-field>
+                        <mat-label>Connect timeout</mat-label>
+                        <input
+                            matInput
+                            [(ngModel)]="service.connect_timeout"
+                            type="number"
+                            min="1"
+                        />
+                        <mat-error>Invalid connect timeout. Valid numbers are greater 0.</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Read timeout</mat-label>
+                        <input matInput [(ngModel)]="service.read_timeout" type="number" min="1" />
+                        <mat-error>Invalid read timeout. Valid numbers are greater 0.</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Write timeout</mat-label>
+                        <input matInput [(ngModel)]="service.write_timeout" type="number" min="1" />
+                        <mat-error>Invalid write timeout. Valid numbers are greater 0.</mat-error>
+                    </mat-form-field>
+
+                    <mat-checkbox
+                        class="kong-route-dialog-checkbox"
+                        [(ngModel)]="service.tls_verify"
+                    >
+                        TLS verify
+                    </mat-checkbox>
+
+                    <mat-form-field>
+                        <mat-label>TLS verify depth</mat-label>
+                        <input
+                            matInput
+                            [(ngModel)]="service.tls_verify_depth"
+                            type="number"
+                            min="1"
+                        />
+                        <mat-error>Invalid number. Valid numbers are greater 0.</mat-error>
+                    </mat-form-field>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-dialog-content>
+
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="15px">
+        <button class="mat-raised-button" (click)="cancel()">cancel</button>
+        <button
+            type="submit"
+            class="mat-raised-button"
+            (click)="ok()"
+            [class.mat-primary]="!name.invalid && !host.invalid"
+            [disabled]="name.invalid || host.invalid"
+        >
+            save
+        </button>
+    </mat-dialog-actions>
+</div>

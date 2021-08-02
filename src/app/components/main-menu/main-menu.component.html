@@ -1,0 +1,86 @@
+<div class="kong-main-menu-toolbar">
+    <mat-toolbar color="accent" style="height: 100%">
+        <mat-toolbar-row>
+            <span>Kong Admin</span>
+            <button
+                *ngIf="configService.kong.length > 1"
+                [matMenuTriggerFor]="kongMenu"
+                mat-icon-button
+                [disabled]="!enabled()"
+                matTooltip="Kong instance selector"
+            >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <app-http-progress-ui></app-http-progress-ui>
+            <mat-menu #kongMenu="matMenu">
+                <mat-radio-group fxLayout="column">
+                    <mat-radio-button
+                        class="kong-main-menu-selection-button"
+                        *ngFor="let kong of configService.kong"
+                        [value]="kong.name"
+                        [checked]="kong.name === (selected | async).name"
+                        (change)="onKongChange($event)"
+                        >{{ kong.name }}</mat-radio-button
+                    >
+                </mat-radio-group>
+            </mat-menu>
+        </mat-toolbar-row>
+        <mat-toolbar-row>
+            <span class="kong-main-menu-name" matTooltip="{{ (selected | async).url }}">
+                {{ (selected | async).name }}
+            </span>
+        </mat-toolbar-row>
+        <mat-toolbar-row>
+            <div fxFlex fxLayout fxLayoutGap="15px" fxLayoutAlign="space-evenly center">
+                <mat-icon matTooltip="{{ authService.username }}">person</mat-icon>
+                <button
+                    mat-icon-button
+                    matTooltip="logout"
+                    [disabled]="!authService.isAuthenticated()"
+                    (click)="onLogout()"
+                >
+                    <mat-icon>logout</mat-icon>
+                </button>
+                <button
+                    mat-icon-button
+                    matTooltip="refresh"
+                    (click)="onRefresh()"
+                    [disabled]="!enabled()"
+                >
+                    <mat-icon>refresh</mat-icon>
+                </button>
+            </div>
+        </mat-toolbar-row>
+        <mat-toolbar-row>
+            <button mat-icon-button routerLink="/overview" [disabled]="!enabled()">
+                <mat-icon>dashboard</mat-icon><span class="kong-main-menu-item">Dashboard</span>
+            </button>
+        </mat-toolbar-row>
+        <mat-toolbar-row>
+            <button mat-icon-button routerLink="services" [disabled]="!enabled()">
+                <mat-icon>settings</mat-icon><span class="kong-main-menu-item">Services</span>
+            </button>
+        </mat-toolbar-row>
+        <mat-toolbar-row>
+            <button mat-icon-button routerLink="routes" [disabled]="!enabled()">
+                <mat-icon>alt_route</mat-icon><span class="kong-main-menu-item">Routes</span>
+            </button>
+        </mat-toolbar-row>
+        <!-- <mat-toolbar-row>
+            <button mat-icon-button routerLink="certificates">
+                <mat-icon>class</mat-icon><span class="kong-main-menu-item">Certificates</span>
+            </button>
+        </mat-toolbar-row>
+        <mat-toolbar-row>
+            <button mat-icon-button routerLink="upstreams">
+                <mat-icon>group_work</mat-icon><span class="kong-main-menu-item">Upstreams</span>
+            </button>
+        </mat-toolbar-row> -->
+        <mat-toolbar-row>
+            <button mat-icon-button routerLink="consumers" [disabled]="!enabled()">
+                <mat-icon>people</mat-icon><span class="kong-main-menu-item">Consumers</span>
+            </button>
+        </mat-toolbar-row>
+        <mat-toolbar-row class="kong-main-menu-item-last"> &nbsp; </mat-toolbar-row>
+    </mat-toolbar>
+</div>

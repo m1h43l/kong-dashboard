@@ -1,0 +1,34 @@
+.mat-toolbar.mat-primary {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.kong-main-menu-name {
+    font-size: 80%;
+}
+
+.kong-mainmenu-toolbar {
+    width: 200px;
+    margin-bottom: 25px;
+}
+
+@media screen and (max-width: 599px) {
+    .kong-mainmenu-toolbar {
+        margin-bottom: 0px;
+    }
+}
+
+.kong-main-menu-user {
+    vertical-align: middle;
+    margin-right: 25px;
+}
+
+.kong-main-menu-item {
+    font-size: 120%;
+    margin-left: 15px;
+}
+
+.kong-main-menu-selection-button {
+    margin: 8px;
+}

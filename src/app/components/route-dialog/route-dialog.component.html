@@ -1,0 +1,220 @@
+<div>
+    <h2 mat-dialog-title>Route</h2>
+
+    <mat-dialog-content class="kong-dialog kong-route-dialog">
+        <mat-tab-group mat-stretch-tabs>
+            <mat-tab label="Common">
+                <div
+                    class="kong-route-dialog-tab-content"
+                    fxLayout="column"
+                    fxLayoutAlign="space-between none"
+                >
+                    <mat-form-field>
+                        <mat-label>Name</mat-label>
+                        <input
+                            #name="ngModel"
+                            matInput
+                            required
+                            [(ngModel)]="route.name"
+                            pattern="[a-zA-Z0-9\\.,-_~]*"
+                        />
+                        <mat-error>Invalid name</mat-error>
+                        <mat-hint>Valid characters are: a-z A-Z 0-9 , . _ - ~</mat-hint>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Protocols</mat-label>
+                        <mat-select multiple [(ngModel)]="route.protocols">
+                            <mat-option [value]="'grpc'">gRPC</mat-option>
+                            <mat-option [value]="'grpcs'">gRPCS</mat-option>
+                            <mat-option [value]="'http'">HTTP</mat-option>
+                            <mat-option [value]="'https'">HTTPS</mat-option>
+                            <mat-option [value]="'tcp'">TCP</mat-option>
+                            <mat-option [value]="'tls'">TLS</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Methods</mat-label>
+                        <mat-select multiple [(ngModel)]="route.methods">
+                            <mat-option [value]="'GET'">GET</mat-option>
+                            <mat-option [value]="'HEAD'">HEAD</mat-option>
+                            <mat-option [value]="'POST'">POST</mat-option>
+                            <mat-option [value]="'PUT'">PUT</mat-option>
+                            <mat-option [value]="'DELETE'">DELETE</mat-option>
+                            <mat-option [value]="'CONNECT'">CONNECT</mat-option>
+                            <mat-option [value]="'OPTIONS'">OPTIONS</mat-option>
+                            <mat-option [value]="'TRACE'">TRACE</mat-option>
+                            <mat-option [value]="'PATCH'">PATCH</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Hosts</mat-label>
+                        <mat-chip-list #hostsChipList>
+                            <mat-basic-chip
+                                class="kong-route-dialog-chip"
+                                *ngFor="let host of route.hosts"
+                                [selectable]="truthy"
+                                [removable]="truthy"
+                                (removed)="removeHost(host)"
+                            >
+                                {{ host }}
+                                <mat-icon matChipRemove *ngIf="truthy">cancel</mat-icon>
+                            </mat-basic-chip>
+                            <input
+                                class="kong-route-dialog-chip-input"
+                                placeholder="Enter new host"
+                                [matChipInputFor]="hostsChipList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                [matChipInputAddOnBlur]="truthy"
+                                (matChipInputTokenEnd)="addHost($event)"
+                            />
+                        </mat-chip-list>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Paths</mat-label>
+                        <mat-chip-list #pathsChipList>
+                            <mat-basic-chip
+                                class="kong-route-dialog-chip"
+                                *ngFor="let path of route.paths"
+                                [selectable]="truthy"
+                                [removable]="truthy"
+                                (removed)="removePath(path)"
+                            >
+                                {{ path }}
+                                <mat-icon matChipRemove *ngIf="truthy">cancel</mat-icon>
+                            </mat-basic-chip>
+                            <input
+                                class="kong-route-dialog-chip-input"
+                                placeholder="Enter new path"
+                                [matChipInputFor]="pathsChipList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                [matChipInputAddOnBlur]="truthy"
+                                (matChipInputTokenEnd)="addPath($event)"
+                            />
+                        </mat-chip-list>
+                    </mat-form-field>
+
+                    <div fxLayout="row" fxFlex>
+                        <mat-form-field fxFlex>
+                            <mat-label>Service</mat-label>
+                            <mat-select
+                                [compareWith]="compareServiceIds"
+                                [(ngModel)]="route.service"
+                            >
+                                <mat-option>--- none ---</mat-option>
+                                <mat-option
+                                    *ngFor="let service of services"
+                                    [value]="serviceToServiceIdObject(service)"
+                                >
+                                    {{ service.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <button
+                            *ngIf="route.service"
+                            mat-icon-button
+                            matTooltip="Open assigned service"
+                            (click)="onOpenAssignedService()"
+                        >
+                            <mat-icon>launch</mat-icon>
+                        </button>
+                    </div>
+
+                    <mat-form-field>
+                        <mat-label>Tags</mat-label>
+                        <mat-chip-list #tagsChipList>
+                            <mat-chip
+                                class="kong-route-dialog-chip"
+                                *ngFor="let tag of route.tags"
+                                [selectable]="truthy"
+                                [removable]="truthy"
+                                (removed)="removeTag(tag)"
+                            >
+                                {{ tag }}
+                                <mat-icon matChipRemove *ngIf="truthy">cancel</mat-icon>
+                            </mat-chip>
+                            <input
+                                class="kong-route-dialog-chip-input"
+                                placeholder="Enter new tag"
+                                [matChipInputFor]="tagsChipList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                [matChipInputAddOnBlur]="truthy"
+                                (matChipInputTokenEnd)="addTag($event)"
+                            />
+                        </mat-chip-list>
+                    </mat-form-field>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Additional">
+                <div
+                    class="kong-route-dialog-tab-content"
+                    fxLayout="column"
+                    fxLayoutAlign="space-between none"
+                >
+                    <mat-form-field>
+                        <mat-label>Path handling</mat-label>
+                        <mat-select [(ngModel)]="route.path_handling">
+                            <mat-option [value]="'v0'">v0</mat-option>
+                            <mat-option [value]="'v1'">v1</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Regex priority</mat-label>
+                        <input type="number" matInput [(ngModel)]="route.regex_priority" />
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>HTTPS redirect status code</mat-label>
+                        <mat-select [(ngModel)]="route.https_redirect_status_code">
+                            <mat-option [value]="301">301 - Moved Permanently</mat-option>
+                            <mat-option [value]="302">302 - Found</mat-option>
+                            <mat-option [value]="307">307 - Temporary Redirect</mat-option>
+                            <mat-option [value]="308">308 - Permanent Redirect</mat-option>
+                            <mat-option [value]="426">426 - Upgrade Required</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-checkbox class="kong-route-dialog-checkbox" [(ngModel)]="route.strip_path"
+                        >Strip path</mat-checkbox
+                    >
+                    <mat-checkbox
+                        class="kong-route-dialog-checkbox"
+                        [(ngModel)]="route.preserve_host"
+                        >Preserve host</mat-checkbox
+                    >
+                    <mat-checkbox
+                        class="kong-route-dialog-checkbox"
+                        [(ngModel)]="route.request_buffering"
+                    >
+                        Request buffering
+                    </mat-checkbox>
+                    <mat-checkbox
+                        class="kong-route-dialog-checkbox"
+                        [(ngModel)]="route.response_buffering"
+                    >
+                        Response buffering
+                    </mat-checkbox>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-dialog-content>
+
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="15px">
+        <button class="mat-raised-button" (click)="cancel()">cancel</button>
+        <button
+            type="submit"
+            class="mat-raised-button"
+            (click)="ok()"
+            [class.mat-primary]="!name.invalid && isValid()"
+            [disabled]="name.invalid || !isValid()"
+        >
+            save
+        </button>
+    </mat-dialog-actions>
+</div>

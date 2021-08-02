@@ -1,0 +1,24 @@
+/* You can add global styles to this file, and also import other style files */
+@import "themes/bg-dark.scss";
+
+@import "../node_modules/ngx-toastr/toastr.css";
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.monospace {
+    font-family: "Courier New", Courier, monospace;
+}
+
+.kong-dialog mat-chip-list .mat-chip-list-wrapper {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+}

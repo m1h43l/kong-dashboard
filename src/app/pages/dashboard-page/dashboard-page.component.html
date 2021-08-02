@@ -1,0 +1,144 @@
+<div class="kong-dashboard" *ngIf="serverInfo; else noServerInfo" fxLayout="row wrap">
+    <div fxFlex="grow">
+        <mat-card>
+            <mat-card-title><mat-icon>link</mat-icon>&nbsp;Connections</mat-card-title>
+            <mat-card-content>
+                <div
+                    *ngIf="metrics; else noMetrics"
+                    fxLayout="row wrap"
+                    fxLayoutAlign="space-around center"
+                    class="kong-dashboard-content"
+                >
+                    <div class="kong-dashboard-content-conn-section">
+                        <div class="kong-dashboard-content-name">Total</div>
+                        <div class="kong-dashboard-content-value">
+                            {{ metrics.connections.total }}
+                        </div>
+                    </div>
+                    <div class="kong-dashboard-content-conn-section">
+                        <div class="kong-dashboard-content-name">Active</div>
+                        <div class="kong-dashboard-content-value">
+                            {{ metrics.connections.active }}
+                        </div>
+                    </div>
+                    <div class="kong-dashboard-content-conn-section">
+                        <div class="kong-dashboard-content-name">Handled</div>
+                        <div class="kong-dashboard-content-value">
+                            {{ metrics.connections.handled }}
+                        </div>
+                    </div>
+                    <div class="kong-dashboard-content-conn-section">
+                        <div class="kong-dashboard-content-name">Reading</div>
+                        <div class="kong-dashboard-content-value">
+                            {{ metrics.connections.reading }}
+                        </div>
+                    </div>
+                    <div class="kong-dashboard-content-conn-section">
+                        <div class="kong-dashboard-content-name">Writing</div>
+                        <div class="kong-dashboard-content-value">
+                            {{ metrics.connections.writing }}
+                        </div>
+                    </div>
+                    <div class="kong-dashboard-content-conn-section">
+                        <div class="kong-dashboard-content-name">Waiting</div>
+                        <div class="kong-dashboard-content-value">
+                            {{ metrics.connections.waiting }}
+                        </div>
+                    </div>
+                </div>
+                <ng-template #noMetrics>
+                    <em>No metrics available.</em>
+                </ng-template>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div fxFlex="auto">
+        <mat-card>
+            <mat-card-title><mat-icon>settings</mat-icon>&nbsp;Node Info</mat-card-title>
+            <mat-card-content class="kong-dashboard-content">
+                <div fxLayout="column" fxLayoutGap="15px">
+                    <div fxLayout="row">
+                        <div fxFlex="30" class="kong-dashboard-content-name">Host name</div>
+                        <div fxFlex="70">{{ serverInfo.hostname }}</div>
+                    </div>
+                    <mat-divider [inset]="true"></mat-divider>
+                    <div fxLayout="row">
+                        <div fxFlex="30" class="kong-dashboard-content-name">Tag line</div>
+                        <div fxFlex="70">{{ serverInfo.tagline }}</div>
+                    </div>
+                    <mat-divider [inset]="true"></mat-divider>
+                    <div fxLayout="row">
+                        <div fxFlex="30" class="kong-dashboard-content-name">Version</div>
+                        <div fxFlex="70">{{ serverInfo.version }}</div>
+                    </div>
+                    <mat-divider [inset]="true"></mat-divider>
+                    <div fxLayout="row">
+                        <div fxFlex="30" class="kong-dashboard-content-name">Location</div>
+                        <div fxFlex="70">{{ serverInfo.location }}</div>
+                    </div>
+                    <mat-divider [inset]="true"></mat-divider>
+                    <div fxLayout="row">
+                        <div fxFlex="30" class="kong-dashboard-content-name">Config file</div>
+                        <div fxFlex="70">{{ serverInfo.configFile }}</div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div fxFlex="auto">
+        <mat-card>
+            <mat-card-title><mat-icon>storage</mat-icon>&nbsp;Datastore Info</mat-card-title>
+            <mat-card-content class="kong-dashboard-content">
+                <div fxLayout="column" fxLayoutGap="15px">
+                    <div fxLayout="row">
+                        <div fxFlex="30" class="kong-dashboard-content-name">DBMS</div>
+                        <div fxFlex="70">{{ serverInfo.database.dbms }}</div>
+                    </div>
+                    <mat-divider [inset]="true"></mat-divider>
+                    <div fxLayout="row">
+                        <div fxFlex="30" class="kong-dashboard-content-name">Host</div>
+                        <div fxFlex="70">{{ serverInfo.database.host }}</div>
+                    </div>
+                    <mat-divider [inset]="true"></mat-divider>
+                    <div fxLayout="row">
+                        <div fxFlex="30" class="kong-dashboard-content-name">Port</div>
+                        <div fxFlex="70">{{ serverInfo.database.port }}</div>
+                    </div>
+                    <mat-divider [inset]="true"></mat-divider>
+                    <div fxLayout="row">
+                        <div fxFlex="30" class="kong-dashboard-content-name">Name</div>
+                        <div fxFlex="70">{{ serverInfo.database.name }}</div>
+                    </div>
+                    <mat-divider [inset]="true"></mat-divider>
+                    <div fxLayout="row">
+                        <div>&nbsp;</div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div fxFlex="grow">
+        <mat-card>
+            <mat-card-title><mat-icon>power</mat-icon>&nbsp;Plugins</mat-card-title>
+            <mat-card-content class="kong-dashboard-content">
+                <mat-chip-list
+                    *ngIf="serverInfo.plugins && serverInfo.plugins.length > 0; else noPlugins"
+                >
+                    <mat-chip *ngFor="let plugin of serverInfo.plugins">{{ plugin }}</mat-chip>
+                </mat-chip-list>
+                <ng-template #noPlugins><em>No plugins installed.</em></ng-template>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+<ng-template #noServerInfo>Loading ...</ng-template>
+
+<!-- version
+    configuration:
+    - nginx_conf : configuration file path
+    - nginx_err_log: error log
+    - nginx_kong_conf : Kong config file
+    - loaded_plugins : installed plugins
+    - dns_resolver: DNS
+    - dns_hostsfile -->
